@@ -17,10 +17,11 @@ public class Temp {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Double value;
-    @JsonFormat(pattern="dd-MMM-yyyy HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Budapest")
     private Date dateOfMeasure;
     @ManyToOne(fetch = FetchType.LAZY)
     private TempSensor tempSensor;
+    @Enumerated(EnumType.STRING)
     private TempState tempState;
 
 }

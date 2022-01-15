@@ -17,8 +17,14 @@ public class TempSpecification implements Specification<Temp> {
     public Predicate toPredicate(Root<Temp> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
             if (criteria.getTempState() != null) {
-                return criteriaBuilder.equal(
+
+                Predicate pForValid = criteriaBuilder.equal(
                         root.<String> get(criteria.getTempState().name()), TempState.VALID.name());
+
+                Predicate pForAlarm = criteriaBuilder.equal(
+                        root.<String> get(criteria.getTempState().name()), TempState.ALARM.name());
+
+                return criteriaBuilder.and(pForValid, pForAlarm);
             }
 
             return null;

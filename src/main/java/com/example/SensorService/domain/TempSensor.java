@@ -18,6 +18,7 @@ public class TempSensor {
     private String description;
     private Double maxAlarm;
     private Double minAlarm;
+    @Enumerated(EnumType.STRING)
     private SensorState sensorState;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tempSensor")
     private List<Temp> temps;
