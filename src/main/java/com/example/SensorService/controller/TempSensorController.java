@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/sensor")
@@ -22,26 +21,26 @@ public class TempSensorController {
 
     @GetMapping("/")
     public ResponseEntity<List<TempSensorDto>> findAll() {
-        return new ResponseEntity<>(tempSensorService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(tempSensorMapper.toDtoList(tempSensorService.findAll()));
     }
 
     @GetMapping({"/{id}"})
     public ResponseEntity<TempSensorDto> find(@PathVariable Short id) {
-        return ResponseEntity.of(tempSensorService.findById(id).map(tempSensorMapper::map));
+        return ResponseEntity.of(tempSensorService.findById(id).map(tempSensorMapper::toDto));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<TempSensorDto> create(@RequestBody TempSensor tempSensor){
-        return new ResponseEntity<>(tempSensorService.insert(tempSensor), HttpStatus.CREATED);
+    public ResponseEntity<TempSensorDto> create(@RequestBody TempSensor tempSensor) {
+        return new ResponseEntity<>(tempSensorMapper.toDto(tempSensorService.insert(tempSensor)), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<TempSensorDto> update(@PathVariable("id") Short id, @RequestBody TempSensor tempSensor){
-        return new ResponseEntity<>(tempSensorService.update(id, tempSensor), HttpStatus.OK);
+    public ResponseEntity<TempSensorDto> update(@PathVariable("id") Short id, @RequestBody TempSensor tempSensor) {
+        return ResponseEntity.ok(tempSensorMapper.toDto(tempSensorService.update(id, tempSensor)));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Short id){
+    public ResponseEntity<Void> delete(@PathVariable("id") Short id) {
         tempSensorService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

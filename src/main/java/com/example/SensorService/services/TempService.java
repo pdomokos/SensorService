@@ -3,30 +3,27 @@ package com.example.SensorService.services;
 import com.example.SensorService.domain.Temp;
 import com.example.SensorService.domain.TempSearchCriteria;
 import com.example.SensorService.domain.TempSpecification;
-import com.example.SensorService.domain.dto.TempDto;
-import com.example.SensorService.domain.mapper.ITempMapper;
+import com.example.SensorService.domain.TempState;
 import com.example.SensorService.repositories.ITempRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Service
-public class TempService implements ITempService{
+public class TempService implements ITempService {
 
     private final ITempRepository tempRepository;
-    private final ITempMapper tempMapper;
 
     @Override
-    public List<TempDto> findAll(TempSearchCriteria tempSearchCriteria, Pageable pageable) {
-        return tempMapper.toDtoPage(tempRepository.findAll(new TempSpecification(tempSearchCriteria), pageable));
-    }
-
-    @Override
-    public List<TempDto> findAll() {
-        return tempMapper.toDtoList(tempRepository.findAll());
+    public Page<Temp> findAll(TempSearchCriteria tempSearchCriteria, Pageable pageable) {
+        if (tempSearchCriteria.getTempStateList() == null) {
+            tempSearchCriteria.setTempStateList(Arrays.asList(TempState.VALID, TempState.ALARM));
+        }
+        return tempRepository.findAll(TempSpecification.builder().criteria(tempSearchCriteria).build(), pageable);
     }
 
     @Override
@@ -34,8 +31,4 @@ public class TempService implements ITempService{
         return tempRepository.save(temp);
     }
 
-    @Override
-    public List<Temp> insert(List<Temp> tempList) {
-        return tempRepository.saveAll(tempList);
-    }
 }
