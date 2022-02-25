@@ -5,14 +5,16 @@ import com.example.SensorService.repositories.ITempSensorRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class TempSensorServiceTest {
 
-    static final Short SENSOR_ID = 1;
+    private static final Short SENSOR_ID = 1;
 
     @Autowired
     private ITempSensorRepository tempSensorRepository;
@@ -26,15 +28,14 @@ class TempSensorServiceTest {
 
     @Test
     void findById() {
-        TempSensor tempSensor = new TempSensor();
-        tempSensor.setId(SENSOR_ID);
-        TempSensor ts = tempSensorRepository.save(tempSensor);
+        TempSensor tempSensor = TempSensor.builder().id(SENSOR_ID).build();
+        tempSensorRepository.save(tempSensor);
 
         Optional<TempSensor> result = tempSensorService.findById(SENSOR_ID);
 
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(ts.getId(), result.get().getId())
+                () -> assertEquals(SENSOR_ID, result.orElseThrow().getId())
         );
     }
 

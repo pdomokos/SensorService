@@ -1,17 +1,21 @@
-package com.example.SensorService.services;
+package com.example.SensorService.services.listeners;
 
 import com.example.SensorService.domain.Temp;
 import com.example.SensorService.domain.TempSensor;
 import com.example.SensorService.domain.TempState;
 import com.example.SensorService.domain.dto.TempDto;
+import com.example.SensorService.services.ITempSensorService;
+import com.example.SensorService.services.ITempService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Profile("default")
 @Component
 @RequiredArgsConstructor
 public class TempReceiver implements RabbitListenerConfigurer {
